@@ -26,5 +26,5 @@ public:
     void print();
 };
 
-#include "linklistfun.h" 
+#include "source.cpp" 
 

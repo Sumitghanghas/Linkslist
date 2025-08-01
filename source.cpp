@@ -122,4 +122,3 @@ void linkist<v>::print()
     }
     cout << "NULL";
 }
-
