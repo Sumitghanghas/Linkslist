@@ -1,3 +1,4 @@
+#include "LinkList.h"
 template <typename v>
 Node<v>::Node(v value)
 {
@@ -44,17 +45,12 @@ void linkist<v>::insert(int index, v value)
         head = newNode;
         return;
     }
-    Node<v> *temp = head;
-    int count = 0;
-    while (temp && count < index - 1)
-    {
-        temp = temp->next;
-        count++;
-    }
-    if (!temp)
+
+    Node<v> *prevNode = prev(index);
+    if (!prevNode || !prevNode->next)
         return;
-    newNode->next = temp->next;
-    temp->next = newNode;
+    newNode->next = prevNode->next;
+    prevNode->next = newNode;
 }
 
 template <typename v>
@@ -90,6 +86,7 @@ void linkist<v>::remove(int index)
 {
     if (!head || index < 0)
         return;
+
     if (index == 0)
     {
         Node<v> *temp = head;
@@ -97,17 +94,13 @@ void linkist<v>::remove(int index)
         delete temp;
         return;
     }
-    Node<v> *temp = head;
-    int count = 0;
-    while (temp && count < index - 1)
-    {
-        temp = temp->next;
-        count++;
-    }
-    if (!temp || !temp->next)
+
+    Node<v> *prevNode = prev(index);
+    if (!prevNode || !prevNode->next)
         return;
-    Node<v> *deletenode = temp->next;
-    temp->next = deletenode->next;
+
+    Node<v> *deletenode = prevNode->next;
+    prevNode->next = deletenode->next;
     delete deletenode;
 }
 
@@ -120,5 +113,18 @@ void linkist<v>::print()
         cout << temp->data << "->";
         temp = temp->next;
     }
-    cout << "NULL";
+    cout << "NULL" << endl;
+}
+template <typename v>
+Node<v> *linkist<v>::prev(int index)
+{
+    // cout<<index<<endl;
+    Node<v> *temp = head;
+    int count = 0;
+    while (temp && count < index - 1)
+    {
+        temp = temp->next;
+        count++;
+    }
+    return temp;
 }
