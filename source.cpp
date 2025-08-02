@@ -13,6 +13,66 @@ linkist<v>::linkist()
 }
 
 template <typename v>
+linkist<v>::linkist(const linkist<v> &other)
+{
+    head = nullptr;
+    if (!other.head)
+        return;
+
+    head = new Node<v>(other.head->data);
+    Node<v> *current = head;
+    Node<v> *otherCurrent = other.head->next;
+
+    while (otherCurrent)
+    {
+        current->next = new Node<v>(otherCurrent->data);
+        current = current->next;
+        otherCurrent = otherCurrent->next;
+    }
+}
+
+template <typename v>
+linkist<v> &linkist<v>::operator=(const linkist<v> &other)
+{
+    if (this == &other)
+        return *this;
+
+    destroy();
+
+    if (!other.head)
+    {
+        head = nullptr;
+        return *this;
+    }
+
+    head = new Node<v>(other.head->data);
+    Node<v> *current = head;
+    Node<v> *otherCurrent = other.head->next;
+
+    while (otherCurrent)
+    {
+        current->next = new Node<v>(otherCurrent->data);
+        current = current->next;
+        otherCurrent = otherCurrent->next;
+    }
+
+    return *this;
+}
+
+template <typename v>
+void linkist<v>::destroy()
+{
+    Node<v> *current = head;
+    while (current)
+    {
+        Node<v> *next = current->next;
+        delete current;
+        current = next;
+    }
+    head = nullptr;
+}
+
+template <typename v>
 void linkist<v>::perpend(v value)
 {
     Node<v> *newNode = new Node<v>(value);
@@ -38,6 +98,9 @@ void linkist<v>::append(v value)
 template <typename v>
 void linkist<v>::insert(int index, v value)
 {
+    if(index < 0){
+        cout<<"Index is out of bound : "<<index<<"  value is not insert in the linklist :"<<value<<endl;
+    }
     Node<v> *newNode = new Node<v>(value);
     if (index == 0 || !head)
     {
@@ -96,8 +159,10 @@ void linkist<v>::remove(int index)
     }
 
     Node<v> *prevNode = prev(index);
-    if (!prevNode || !prevNode->next)
+    if (!prevNode || !prevNode->next){
+        cout<<"Index is greater then the size : "<<index<<endl;
         return;
+    }
 
     Node<v> *deletenode = prevNode->next;
     prevNode->next = deletenode->next;
@@ -127,4 +192,10 @@ Node<v> *linkist<v>::prev(int index)
         count++;
     }
     return temp;
+}
+
+template <typename v>
+linkist<v>::~linkist()
+{
+    destroy();
 }
